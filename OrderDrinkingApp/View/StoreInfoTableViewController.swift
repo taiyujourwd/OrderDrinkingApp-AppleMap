@@ -22,7 +22,9 @@ class StoreInfoTableViewController: UITableViewController, CLLocationManagerDele
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        fetchStoreInfo(lat, lng)
+        if let lat = locations.first?.coordinate.latitude, let lng = locations.first?.coordinate.longitude {
+            fetchStoreInfo(lat, lng)
+        }
     }
         
     func fetchUserLocation() {
@@ -42,14 +44,11 @@ class StoreInfoTableViewController: UITableViewController, CLLocationManagerDele
             //指派span為MKCoordinateSpan後加入精度緯度的比例
             let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: scaleForY, longitudeDelta: scaleForX)
             //指派regineForNow為MKCoordinateRegion加入現在的user位置，顯示比例為span
-            let regineForNow = MKCoordinateRegion(center: hereForNow, span: span)
-            lat = regineForNow.center.latitude
-            lng = regineForNow.center.longitude
+            let _ = MKCoordinateRegion(center: hereForNow, span: span)
         }
     }
     
     func fetchStoreInfo(_ lat: Double, _ lng: Double) {
-//        fetchUserLocation()
         
         let orgUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=\(lat),\(lng)&radius=1000&keyword=春水堂&language=zh-TW&key=AIzaSyDK7dj5GZheIWk_HSbF7Gv7AakP0Vvxro8"
         //網址有中文字，需進行編碼
